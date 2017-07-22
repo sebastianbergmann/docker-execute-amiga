@@ -8,34 +8,39 @@
 # file that was distributed with this source code.
 #
 
-if [ -z $1 ]
-  then
-    echo "$0 <executable>"
+usage() {
+    echo "Usage: $0 [path] <executable>"
     exit 1
-fi
+}
 
-if [ ! -f $1 ]; then
+if [[ ! -f "$1"  && ( ! -d "$1" || ! -f "$1/$2" ) ]]; then
     echo "$1 not found"
-    exit 1
+    usage
 fi
 
-amiga=`mktemp -d`
+amiga=$(mktemp -d)
 
 mkdir "$amiga/C"
-cp $1 "$amiga/C"
 
 mkdir "$amiga/S"
-echo "C:$1" > "$amiga/S/startup-sequence"
+
+if [ -f "$1" ]; then
+    cp  "$1" "$amiga/C"
+    echo "C:$1" > "$amiga/S/startup-sequence"
+elif [ -d "$1" ]; then
+    cp -r "$1" "$amiga/C"
+    echo "C:$1/$2" > "$amiga/S/startup-sequence"
+fi
 
 docker run -it \
-  -e DISPLAY=$DISPLAY \
+  -e DISPLAY="$DISPLAY" \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
-  -v $HOME/.config/fs-uae/:/home/fsuae/config \
-  -v $amiga:/amiga \
+  -v "$HOME"/.config/fs-uae/:/home/fsuae/config \
+  -v "$amiga":/amiga \
   jamesnetherton/fs-uae \
   --amiga_model=A1200 \
   --hard_drive_0=/amiga \
   > /dev/null
 
-rm -rf $amiga
+rm -rf "$amiga"
 
