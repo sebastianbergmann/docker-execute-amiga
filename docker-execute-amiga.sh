@@ -33,6 +33,7 @@ elif [ -d "$1" ]; then
 fi
 
 docker run \
+  --rm \
   --env DISPLAY="$DISPLAY" \
   --volume /tmp/.X11-unix:/tmp/.X11-unix \
   --volume "$HOME"/.config/fs-uae/:/home/fsuae/config \
