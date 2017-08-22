@@ -32,7 +32,8 @@ elif [ -d "$1" ]; then
     echo "C:$1/$2" > "$amiga/S/startup-sequence"
 fi
 
-docker run -it \
+docker run \
+  -it \
   -e DISPLAY="$DISPLAY" \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v "$HOME"/.config/fs-uae/:/home/fsuae/config \
