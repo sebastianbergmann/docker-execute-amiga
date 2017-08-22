@@ -33,10 +33,10 @@ elif [ -d "$1" ]; then
 fi
 
 docker run \
-  -e DISPLAY="$DISPLAY" \
-  -v /tmp/.X11-unix:/tmp/.X11-unix \
-  -v "$HOME"/.config/fs-uae/:/home/fsuae/config \
-  -v "$amiga":/amiga \
+  --env DISPLAY="$DISPLAY" \
+  --volume /tmp/.X11-unix:/tmp/.X11-unix \
+  --volume "$HOME"/.config/fs-uae/:/home/fsuae/config \
+  --volume "$amiga":/amiga \
   jamesnetherton/fs-uae \
   --amiga_model=A1200 \
   --hard_drive_0=/amiga \
